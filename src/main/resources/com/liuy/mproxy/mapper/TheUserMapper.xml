@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liuy.mproxy.mapper.TheUserMapper" >
+  <resultMap id="BaseResultMap" type="com.liuy.mproxy.model.entity.TheUser" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_deal_name" property="userDealName" jdbcType="VARCHAR" />
+    <result column="user_password" property="userPassword" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="is_activate" property="isActivate" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="image_path" property="imagePath" jdbcType="VARCHAR" />
+    <result column="del" property="del" jdbcType="INTEGER" />
+    <result column="mother_language_name" property="motherLanguageName" jdbcType="VARCHAR" />
+    <result column="country_code" property="countryCode" jdbcType="VARCHAR" />
+    <result column="country_name" property="countryName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="user_content" property="userContent" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_phone, user_name, user_deal_name, user_password, email, state, is_activate, 
+    create_time, image_path, del, mother_language_name, country_code, country_name, city_code, 
+    city_name, user_content, version
+  </sql>
+  <update id="updateUser" parameterType="com.liuy.mproxy.model.entity.TheUser">
+    UPDATE the_user
+    <set>
+      <if test="userName != null and userName != ''">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userDealName != null and userDealName != ''">
+        user_deal_name = #{userDealName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null and email != ''">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="motherLanguageName != null and motherLanguageName != ''">
+        mother_language_name = #{motherLanguageName,jdbcType=VARCHAR},
+      </if>
+      <if test="userContent != null and userContent != ''">
+        user_content = #{userContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

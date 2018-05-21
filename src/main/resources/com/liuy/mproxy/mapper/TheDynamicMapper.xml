@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liuy.mproxy.mapper.TheDynamicMapper" >
+  <resultMap id="BaseResultMap" type="com.liuy.mproxy.model.vo.TheDynamicVO" >
+    <id column="f_id" property="id" jdbcType="VARCHAR" />
+    <result column="f_user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="f_user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="f_dyna_content" property="dynaContent" jdbcType="VARCHAR" />
+    <result column="f_images" property="images" jdbcType="VARCHAR" />
+    <result column="f_create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="f_del" property="del" jdbcType="INTEGER" />
+    <result column="f_modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="f_grade_code" property="gradeCode" jdbcType="INTEGER" />
+    <result column="f_father_id" property="fatherId" jdbcType="VARCHAR" />
+    <result column="f_head_image" property="headImage" jdbcType="VARCHAR" />
+    <collection property="reviews" javaType="ArrayList" ofType="com.liuy.mproxy.model.entity.TheDynamic">
+      <id column="s_id" property="id" jdbcType="VARCHAR" />
+      <result column="s_user_phone" property="userPhone" jdbcType="VARCHAR" />
+      <result column="s_user_name" property="userName" jdbcType="VARCHAR" />
+      <result column="s_dyna_content" property="dynaContent" jdbcType="VARCHAR" />
+      <result column="s_images" property="images" jdbcType="VARCHAR" />
+      <result column="s_create_time" property="createTime" jdbcType="TIMESTAMP" />
+      <result column="s_del" property="del" jdbcType="INTEGER" />
+      <result column="s_modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+      <result column="s_grade_code" property="gradeCode" jdbcType="INTEGER" />
+      <result column="s_father_id" property="fatherId" jdbcType="VARCHAR" />
+      <result column="s_head_image" property="headImage" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_phone, user_name, dyna_content, images, create_time, del, modify_time,
+    grade_code, father_id, head_image
+  </sql>
+  <select id="queryDynamicList" resultMap="BaseResultMap" parameterType="com.liuy.mproxy.model.dto.TheDynamicDTO">
+      SELECT f.id as f_id, f.user_phone as f_user_phone, f.user_name as f_user_name, f.dyna_content as f_dyna_content,
+       f.images as f_images, f.create_time as f_create_time, f.del as f_del, f.modify_time as f_modify_time,
+      f.grade_code as f_grade_code, f.father_id as f_father_id, f.head_image as f_head_image ,
+      s.id as s_id,
+      s.user_phone as s_user_phone, s.user_name as s_user_name, s.dyna_content as s_dyna_content,
+       s.images as s_images, s.create_time as s_create_time, s.del as s_del, s.modify_time as s_modify_time,
+      s.grade_code as s_grade_code, s.father_id as s_father_id, s.head_image as s_head_image
+      from (SELECT <include refid="Base_Column_List"/> from the_dynamic where grade_code = 1 and del = 0
+      <if test="dynaType == 1">
+          AND user_phone in (SELECT to_user_phone FROM user_to_user WHERE del = 0 and relation = 10 and user_phone = #{userPhone})
+      </if>
+      <if test="dynaType == 2">
+          AND id in
+          <foreach collection="ids" item="ids" index="index" open="(" close=")" separator=",">
+              #{ids}
+          </foreach>
+      </if>
+      ORDER BY create_time DESC limit #{pageNum}, #{pageSize}) f LEFT outer JOIN
+      (SELECT <include refid="Base_Column_List"/> from the_dynamic where grade_code = 2 and del = 0 order by create_time ASC) s
+      on f.id = s.father_id
+  </select>
+    <update id="updateDynamic" parameterType="com.liuy.mproxy.model.entity.TheDynamic">
+        UPDATE the_dynamic
+        <set>
+            <if test="del != null">
+                del = #{del,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

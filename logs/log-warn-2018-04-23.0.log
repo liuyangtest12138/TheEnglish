@@ -1,0 +1,1 @@
+WARN  [2018-04-23 16:18:50,923][] org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration:93 - Cannot find template location(s): [classpath:/templates/] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false) 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liuy.mproxy.mapper.TheArticleMapper" >
+  <resultMap id="BaseResultMap" type="com.liuy.mproxy.model.entity.TheArticle" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="title_image" property="titleImage" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="del" property="del" jdbcType="INTEGER" />
+    <result column="article_from" property="articleFrom" jdbcType="VARCHAR" />
+    <result column="is_recommend" property="isRecommend" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_phone, user_name, title, title_image, create_time, del, article_from,
+    is_recommend, sort
+  </sql>
+  <select id="selectByIds" resultMap="BaseResultMap" parameterType="com.liuy.mproxy.model.dto.TheDynamicDTO">
+    SELECT <include refid="Base_Column_List"/> FROM the_article
+    where del = 0
+    <if test="ids.size() != 0">
+      AND id in
+      <foreach collection="ids" item="ids" index="index" open="(" close=")" separator=",">
+        #{ids}
+      </foreach>
+    </if>
+    limit #{pageNum}, #{pageSize}
+  </select>
+  <update id="updateArticleById" parameterType="com.liuy.mproxy.model.entity.TheArticle">
+    UPDATE the_article
+    <set>
+      <if test="del != null">
+        del = #{del,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
